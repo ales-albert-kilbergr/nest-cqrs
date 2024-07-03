@@ -6,13 +6,20 @@
     "name": "Kilbergr",
     "email": "ales.albert@kilbergr.eu"
   },
+  "keywords": [
+    "nestjs",
+    "cqrs",
+    "factory",
+    "commands",
+    "queries"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ales-albert-kilbergr/nest-cqrs-factory.git"
   },
-  "main": "dist/cjs/index.cjs",
-  "module": "dist/esm/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "test": "jest",
