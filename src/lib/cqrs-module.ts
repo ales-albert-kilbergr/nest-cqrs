@@ -5,9 +5,11 @@ import {
   QueryFactory,
   QueryLogger,
 } from './services';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
+  imports: [CqrsModule],
   providers: [CommandFactory, CommandLogger, QueryFactory, QueryLogger],
-  exports: [],
+  exports: [CommandFactory, QueryFactory],
 })
-export class CqrsFactory {}
+export class CqrsFactoryModule {}

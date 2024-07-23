@@ -9,7 +9,7 @@ import { mock } from 'jest-mock-extended';
 import { CommandFactory, QueryFactory } from './operation-factory.service';
 import { CommandFailedException, QueryFailedException } from '../exceptions';
 import { Command, Query } from '../decorators';
-import { MaxLength } from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 describe('(Unit) OperationFactory', () => {
@@ -346,6 +346,40 @@ describe('(Unit) OperationFactory', () => {
         }),
         expect.any(Number),
       );
+    });
+
+    it('should throw a custom exception from the handler', async () => {
+      // Arrange
+      class CustomException extends CommandFailedException<MyCommand> {}
+      @Command({
+        throws: CustomException,
+      })
+      class MyCommand {
+        @IsString()
+        @MinLength(5)
+        public name!: string;
+      }
+      // Act
+      const act = () => factory.create(MyCommand).name('AA').execute();
+      // Assert
+      await expect(act).rejects.toThrow(CustomException);
+    });
+
+    it('should allow to set an optional property', async () => {
+      // Arrange
+      @Command()
+      class MyCommand {
+        public name!: string;
+        public age?: number;
+      }
+      // Act
+      const command = await factory
+        .create(MyCommand)
+        .name('John')
+        .age(100)
+        .build();
+      // Assert
+      expect(command).toEqual({ name: 'John', age: 100 });
     });
   });
 

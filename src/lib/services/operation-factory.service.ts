@@ -35,27 +35,24 @@ abstract class OperationFactory {
     builderBase.setLogger(this.logger);
     builderBase.setExceptionFactory(exceptionFactory);
 
-    const builderProxy = new Proxy<OperationBuilder<O, R>>(
-      builderBase as OperationBuilder<O, R>,
-      {
-        get(target: any, prop: string | symbol) {
-          return (...args: unknown[]) => {
-            if (prop in target) {
-              const result = Reflect.apply(target[prop], target, args);
+    const builderProxy = new Proxy<OperationBuilder<O, R>>(builderBase as any, {
+      get(target: any, prop: string | symbol) {
+        return (...args: unknown[]) => {
+          if (prop in target) {
+            const result = Reflect.apply(target[prop], target, args);
 
-              return result === builderBase ? builderProxy : result;
+            return result === builderBase ? builderProxy : result;
+          } else {
+            if (args.length === 0) {
+              return builderBase.get(prop as keyof O);
             } else {
-              if (args.length === 0) {
-                return builderBase.get(prop as keyof O);
-              } else {
-                builderBase.set(prop as keyof O, args[0] as O[keyof O]);
-                return builderProxy;
-              }
+              builderBase.set(prop as keyof O, args[0] as O[keyof O]);
+              return builderProxy;
             }
-          };
-        },
+          }
+        };
       },
-    );
+    });
 
     return builderProxy;
   }

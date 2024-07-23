@@ -181,7 +181,7 @@ export class OperationBuilderBase<
 }
 
 export type OperationBuilder<O extends object, R> = {
-  [K in keyof O]: {
+  [K in keyof O]-?: {
     (value: O[K]): OperationBuilder<O, R>;
     (): O[K];
   };
