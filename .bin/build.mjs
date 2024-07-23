@@ -34,7 +34,6 @@ try {
     license: workspacePackageJson.license,
     url: workspacePackageJson.url,
     repository: workspacePackageJson.repository,
-    dependencies: workspacePackageJson.dependencies,
     peerDependencies: workspacePackageJson.dependencies,
     main: 'cjs/index.js',
     module: 'esm/index.js',
